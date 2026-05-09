@@ -147,3 +147,25 @@ async def root():
 @app.get("/health")
 async def health_check():
     return {"status": "healthy", "version": settings.APP_VERSION}
+
+
+# ── Global Exception Handler ──────────────────────────────────────────────────
+@app.exception_handler(Exception)
+async def global_exception_handler(request, exc: Exception):
+    import traceback
+    from fastapi.responses import JSONResponse
+    import logging
+    
+    logger = logging.getLogger("app")
+    error_msg = traceback.format_exc()
+    logger.error(f"GLOBAL ERROR: {error_msg}")
+    
+    return JSONResponse(
+        status_code=500,
+        content={
+            "detail": "Internal Server Error",
+            "error": str(exc),
+            "traceback": error_msg if settings.DEBUG or settings.ENVIRONMENT == "production" else None
+        }
+    )
+
