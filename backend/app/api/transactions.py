@@ -71,6 +71,25 @@ async def create_transaction(
     current_user: User = Depends(get_current_active_user),
 ):
     """Record a new credit or debit transaction."""
+    # Ensure business exists (auto-create if payload.business_id matches current_user.id)
+    from app.models.businesses import Business
+    biz_result = await db.execute(select(Business).where(Business.id == payload.business_id))
+    business = biz_result.scalar_one_or_none()
+
+    if not business:
+        if payload.business_id == current_user.id:
+            business = Business(
+                id=current_user.id,
+                owner_id=current_user.id,
+                name=f"{current_user.full_name}'s Business",
+                slug=f"biz-tx-{str(current_user.id)[:8]}",
+                email=current_user.email,
+            )
+            db.add(business)
+            await db.flush()
+        else:
+            raise HTTPException(status_code=404, detail="Business not found or access denied")
+
     # Get customer to update balance
     cust_result = await db.execute(select(Customer).where(Customer.id == payload.customer_id))
     customer = cust_result.scalar_one_or_none()
