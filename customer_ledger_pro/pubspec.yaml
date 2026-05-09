@@ -38,7 +38,7 @@ dependencies:
   flutter_local_notifications: 17.2.1
 
   # UI
-  google_fonts: 6.2.1
+  google_fonts: ^6.3.0
   lottie: 3.1.2
   cached_network_image: 3.3.1
   shimmer: 3.0.0
