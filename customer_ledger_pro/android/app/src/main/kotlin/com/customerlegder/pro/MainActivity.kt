@@ -1,4 +1,4 @@
-package com.example.customer_ledger_pro
+package com.customerlegder.pro
 
 import io.flutter.embedding.android.FlutterActivity
 

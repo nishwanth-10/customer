@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "695819689490",
+    "project_id": "customer-legder",
+    "storage_bucket": "customer-legder.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:695819689490:android:516c49e3c71e15cb4782cb",
+        "android_client_info": {
+          "package_name": "com.customerlegder.pro"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD19O6DtFEB8DDs1Zr7qqu4NQ-0QPS3eYo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

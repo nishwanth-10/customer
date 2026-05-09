@@ -58,15 +58,26 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     }
   }
 
+  bool _isGoogleLoading = false;
+
   Future<void> _signInWithGoogle() async {
+    if (_isGoogleLoading) return;
+    
+    setState(() => _isGoogleLoading = true);
     try {
       final googleSignIn = GoogleSignIn();
       final account = await googleSignIn.signIn();
-      if (account == null) return;
+      if (account == null) {
+        setState(() => _isGoogleLoading = false);
+        return;
+      }
 
       final auth = await account.authentication;
       final idToken = auth.idToken;
-      if (idToken == null) return;
+      if (idToken == null) {
+        setState(() => _isGoogleLoading = false);
+        return;
+      }
 
       await ref.read(authStateProvider.notifier).signInWithGoogle(idToken);
     } catch (e) {
@@ -74,6 +85,10 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Google sign-in failed: $e')),
         );
+      }
+    } finally {
+      if (mounted) {
+        setState(() => _isGoogleLoading = false);
       }
     }
   }
@@ -255,9 +270,15 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
               // Google Sign In
               OutlinedButton.icon(
-                onPressed: _signInWithGoogle,
-                icon: const Icon(Icons.g_mobiledata, size: 24),
-                label: const Text('Continue with Google'),
+                onPressed: _isGoogleLoading ? null : _signInWithGoogle,
+                icon: _isGoogleLoading 
+                    ? const SizedBox(
+                        width: 24, 
+                        height: 24, 
+                        child: CircularProgressIndicator(strokeWidth: 2)
+                      )
+                    : const Icon(Icons.g_mobiledata, size: 24),
+                label: Text(_isGoogleLoading ? 'Signing in...' : 'Continue with Google'),
                 style: OutlinedButton.styleFrom(
                   minimumSize: const Size(double.infinity, 52),
                 ),

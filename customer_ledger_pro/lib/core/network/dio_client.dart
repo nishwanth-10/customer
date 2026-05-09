@@ -4,8 +4,8 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 
 /// Base URL — change to your deployed backend
-const String kBaseUrl = 'https://customer-ledger-pro-api.onrender.com/api/v1';
-const String kWsUrl = 'wss://customer-ledger-pro-api.onrender.com/ws';
+const String kBaseUrl = 'https://five-crabs-move.loca.lt/api/v1';
+const String kWsUrl = 'wss://five-crabs-move.loca.lt/ws';
 
 const FlutterSecureStorage _storage = FlutterSecureStorage(
   aOptions: AndroidOptions(encryptedSharedPreferences: true),
@@ -20,7 +20,11 @@ final dioProvider = Provider<Dio>((ref) {
     baseUrl: kBaseUrl,
     connectTimeout: const Duration(seconds: 30),
     receiveTimeout: const Duration(seconds: 30),
-    headers: {'Content-Type': 'application/json', 'Accept': 'application/json'},
+    headers: {
+      'Content-Type': 'application/json', 
+      'Accept': 'application/json',
+      'Bypass-Tunnel-Reminder': 'true'
+    },
   ));
 
   // Logging interceptor (debug only)
