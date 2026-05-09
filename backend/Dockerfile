@@ -42,8 +42,10 @@ EXPOSE 8000
 
 # Health check
 HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
-    CMD curl -f http://localhost:8000/health || exit 1
+    CMD curl -f http://localhost:${PORT:-8000}/health || exit 1
 
-# Run with uvicorn
-CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000", \
-     "--workers", "2", "--proxy-headers", "--forwarded-allow-ips", "*"]
+# Default port if not provided by Railway
+ENV PORT=8000
+
+# Run with uvicorn using shell to expand PORT variable
+CMD sh -c "uvicorn app.main:app --host 0.0.0.0 --port $PORT --workers 2 --proxy-headers --forwarded-allow-ips '*'"
