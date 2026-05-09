@@ -139,6 +139,7 @@ class AuthNotifier extends AsyncNotifier<AuthUser?> {
   Future<void> logout() async {
     await clearTokens();
     await LocalStorage.setSetting('user_id', null);
+    await LocalStorage.setSetting('business_id', null);
     await LocalStorage.setSetting('user_name', null);
     await LocalStorage.setSetting('user_role', null);
     state = const AsyncData(null);
@@ -150,6 +151,7 @@ class AuthNotifier extends AsyncNotifier<AuthUser?> {
 
     // Cache user data locally
     await LocalStorage.setSetting('user_id', user.id);
+    await LocalStorage.setSetting('business_id', user.id);
     await LocalStorage.setSetting('user_name', user.fullName);
     await LocalStorage.setSetting('user_role', user.role);
 
