@@ -215,6 +215,18 @@ async def google_auth(payload: GoogleAuthRequest, db: AsyncSession = Depends(get
                 is_verified=True,
             )
             db.add(user)
+            await db.flush()
+
+            # Create default business profile
+            from app.models.businesses import Business
+            business = Business(
+                id=user.id,
+                owner_id=user.id,
+                name=f"{user.full_name}'s Business",
+                slug=f"biz-g-{str(user.id)[:8]}",
+                email=user.email,
+            )
+            db.add(business)
         else:
             user.google_id = google_id
             user.is_verified = True
