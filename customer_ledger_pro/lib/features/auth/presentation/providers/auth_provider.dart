@@ -69,9 +69,9 @@ class AuthNotifier extends AsyncNotifier<AuthUser?> {
       String message = 'Login failed';
       if (e.response?.data != null) {
         if (e.response?.data is Map) {
-          message = e.response?.data['detail'] ?? message;
+          message = e.response?.data['detail']?.toString() ?? message;
         } else {
-          message = e.response?.data.toString();
+          message = e.response?.data.toString() ?? message;
         }
       }
       state = AsyncError(message, StackTrace.current);
@@ -92,9 +92,9 @@ class AuthNotifier extends AsyncNotifier<AuthUser?> {
       String message = 'Registration failed';
       if (e.response?.data != null) {
         if (e.response?.data is Map) {
-          message = e.response?.data['detail'] ?? message;
+          message = e.response?.data['detail']?.toString() ?? message;
         } else {
-          message = e.response?.data.toString();
+          message = e.response?.data.toString() ?? message;
         }
       }
       state = AsyncError(message, StackTrace.current);
