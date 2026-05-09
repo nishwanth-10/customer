@@ -45,20 +45,29 @@ async def lifespan(app: FastAPI):
 
     # ── Firebase ──────────────────────────────────────────────────
     firebase_path = settings.FIREBASE_CREDENTIALS_PATH
+    firebase_json = os.environ.get("FIREBASE_CREDENTIALS_JSON")
+    
     if not os.path.isabs(firebase_path):
         firebase_path = os.path.normpath(
             os.path.join(os.path.dirname(__file__), "..", firebase_path)
         )
-    if os.path.exists(firebase_path):
-        try:
-            if not firebase_admin._apps:
+        
+    try:
+        if not firebase_admin._apps:
+            if firebase_json:
+                import json
+                cred_dict = json.loads(firebase_json)
+                cred = credentials.Certificate(cred_dict)
+                firebase_admin.initialize_app(cred)
+                logger.info("Firebase Admin SDK initialized OK from JSON env var")
+            elif os.path.exists(firebase_path):
                 cred = credentials.Certificate(firebase_path)
                 firebase_admin.initialize_app(cred)
-            logger.info("Firebase Admin SDK initialized OK")
-        except Exception as e:
-            logger.warning(f"Firebase init failed: {e}")
-    else:
-        logger.warning(f"Firebase credentials not found at {firebase_path} — push disabled")
+                logger.info("Firebase Admin SDK initialized OK from file")
+            else:
+                logger.warning(f"Firebase credentials not found at {firebase_path} and FIREBASE_CREDENTIALS_JSON is empty — push disabled")
+    except Exception as e:
+        logger.warning(f"Firebase init failed: {e}")
 
     # ── Upstash Redis ─────────────────────────────────────────────
     redis = get_upstash_redis()
