@@ -110,3 +110,6 @@ flutter_icons:
   min_sdk_android: 21
   adaptive_icon_background: "#3730A3"
   adaptive_icon_foreground: "assets/icons/app_icon_foreground.png"
+
+dependency_overrides:
+  open_filex: ^4.5.0
