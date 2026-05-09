@@ -45,6 +45,10 @@ class AuthNotifier extends AsyncNotifier<AuthUser?> {
     final userRole = LocalStorage.getSetting<String>('user_role');
 
     if (userId != null && userName != null && userRole != null) {
+      final businessId = LocalStorage.getSetting<String>('business_id');
+      if (businessId == null) {
+        await LocalStorage.setSetting('business_id', userId);
+      }
       return AuthUser(
         id: userId,
         fullName: userName,
