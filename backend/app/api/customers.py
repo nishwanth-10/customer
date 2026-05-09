@@ -82,6 +82,25 @@ async def create_customer(
     current_user: User = Depends(get_current_active_user),
 ):
     """Create a new customer."""
+    # Ensure business exists (auto-create if payload.business_id matches current_user.id)
+    from app.models.businesses import Business
+    biz_result = await db.execute(select(Business).where(Business.id == payload.business_id))
+    business = biz_result.scalar_one_or_none()
+
+    if not business:
+        if payload.business_id == current_user.id:
+            business = Business(
+                id=current_user.id,
+                owner_id=current_user.id,
+                name=f"{current_user.full_name}'s Business",
+                slug=f"biz-{str(current_user.id)[:8]}",
+                email=current_user.email,
+            )
+            db.add(business)
+            await db.flush()
+        else:
+            raise HTTPException(status_code=404, detail="Business not found or access denied")
+
     customer = Customer(**payload.model_dump())
     customer.id = uuid.uuid4()
     db.add(customer)

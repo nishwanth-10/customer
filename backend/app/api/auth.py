@@ -46,6 +46,17 @@ async def register(payload: RegisterRequest, db: AsyncSession = Depends(get_db))
     db.add(user)
     await db.flush()
 
+    # Create default business profile for the owner
+    from app.models.businesses import Business
+    business = Business(
+        id=user.id,  # Link business ID to user ID for the primary business
+        owner_id=user.id,
+        name=f"{user.full_name}'s Business",
+        slug=f"biz-{str(user.id)[:8]}",
+        email=user.email,
+    )
+    db.add(business)
+
     # Generate OTP for email verification
     otp = generate_otp()
     user.otp_code = otp
