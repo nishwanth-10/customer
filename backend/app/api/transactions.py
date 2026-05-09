@@ -78,12 +78,15 @@ async def create_transaction(
         raise HTTPException(status_code=404, detail="Customer not found")
 
     # Update customer balance
+    from decimal import Decimal
+    amount_dec = Decimal(str(payload.amount))
+
     if payload.transaction_type == TransactionType.CREDIT:
-        customer.total_paid += payload.amount
-        customer.due_amount = max(0, customer.due_amount - payload.amount)
+        customer.total_paid += amount_dec
+        customer.due_amount = max(Decimal("0"), customer.due_amount - amount_dec)
         customer.last_payment_date = payload.transaction_date
     else:
-        customer.due_amount += payload.amount
+        customer.due_amount += amount_dec
 
     # Compute running balance (positive = customer owes money)
     balance_after = float(customer.due_amount)
