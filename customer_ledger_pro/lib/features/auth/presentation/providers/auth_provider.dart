@@ -66,7 +66,14 @@ class AuthNotifier extends AsyncNotifier<AuthUser?> {
       });
       await _handleAuthResponse(response.data);
     } on DioException catch (e) {
-      final message = e.response?.data?['detail'] ?? 'Login failed';
+      String message = 'Login failed';
+      if (e.response?.data != null) {
+        if (e.response?.data is Map) {
+          message = e.response?.data['detail'] ?? message;
+        } else {
+          message = e.response?.data.toString();
+        }
+      }
       state = AsyncError(message, StackTrace.current);
     }
   }
@@ -82,7 +89,14 @@ class AuthNotifier extends AsyncNotifier<AuthUser?> {
       });
       await _handleAuthResponse(response.data);
     } on DioException catch (e) {
-      final message = e.response?.data?['detail'] ?? 'Registration failed';
+      String message = 'Registration failed';
+      if (e.response?.data != null) {
+        if (e.response?.data is Map) {
+          message = e.response?.data['detail'] ?? message;
+        } else {
+          message = e.response?.data.toString();
+        }
+      }
       state = AsyncError(message, StackTrace.current);
     }
   }
