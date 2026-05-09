@@ -1,0 +1,52 @@
+# .gitignore for Customer Ledger Pro
+
+# ── Secrets ───────────────────────────────────────────────────────────────────
+.env
+*.env
+backend/firebase-credentials.json
+backend/*-firebase-adminsdk-*.json
+customer_ledger_pro/android/key.properties
+customer_ledger_pro/android/upload-keystore.jks
+*.jks
+*.p12
+*.keystore
+
+# ── Python ────────────────────────────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+dist/
+*.egg-info/
+.venv/
+venv/
+env/
+backend/uploads/
+
+# ── Flutter ───────────────────────────────────────────────────────────────────
+customer_ledger_pro/.dart_tool/
+customer_ledger_pro/.flutter-plugins
+customer_ledger_pro/.flutter-plugins-dependencies
+customer_ledger_pro/build/
+customer_ledger_pro/.packages
+customer_ledger_pro/pubspec.lock
+customer_ledger_pro/android/.gradle/
+customer_ledger_pro/android/local.properties
+customer_ledger_pro/android/app/google-services.json
+
+# ── IDE ───────────────────────────────────────────────────────────────────────
+.idea/
+.vscode/settings.json
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+
+# ── Docker ────────────────────────────────────────────────────────────────────
+nginx/ssl/
+
+# ── Database ──────────────────────────────────────────────────────────────────
+*.sqlite
+*.db
